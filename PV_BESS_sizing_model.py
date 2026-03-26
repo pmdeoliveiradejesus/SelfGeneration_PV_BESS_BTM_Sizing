@@ -127,13 +127,13 @@ m.addConstr(Investment0 == BoP + Sc * (CAPEX_pv*Ppvinst + CAPEX_BESS*C + CAPEX_B
 m.addConstr(npv_var == CashFlow_var/(crfe) - Investment0)
 # ENERGY DISPATCH
 m.addConstr(wpv == quicksum(Ppv[t] for t in T))
-m.addConstr(wpvmx == quicksum(Ppvmx[t] for t in T))
+m.addConstr(wpvmx == (1/eff_pv)*quicksum(Ppvmx[t] for t in T))
 m.addConstr(Wb == quicksum(Pb[t] for t in T))
 m.addConstr(Ws == quicksum(Ps[t] for t in T))
 m.addConstr(Wc == quicksum(Pc[t] for t in T))
 m.addConstr(Wd == quicksum(Pd[t] for t in T))
 m.addConstr(Wl == sum(Plinst * data[t]['Plu'] for t in T))
-m.addConstr(wcurtail == wpvmx - wpv)
+m.addConstr(wcurtail == wpvmx/eff_pv - wpv)
 m.addConstr(PinverterBESS <= C*2.0)
 m.addConstr(PinverterBESS >= C*0.1)
 m.addConstr(nx == 1000*Ppvinst/(Rmax*eta*Area))
@@ -155,6 +155,17 @@ if m.Status == GRB.OPTIMAL:
     try:
         NPER = np.log((CF - i * 0) / (CF + i * (-Io))) / np.log(1 + i) if (CF + i * (-Io)) > 0 else 0
     except: NPER = 0
+#m.addConstr(Wb <= 0.12*Wl) 
+#m.addConstr(Ws == 0.00*Wl)
+#m.addConstr(C == 17, name='r10')
+# m.addConstr(PinverterBESS == 2, name='r11')
+#m.addConstr(Ppvinst    == 6, name='r12')
+# m.addConstr(PbmaxP1   == PmaxF, name='r13')
+# m.addConstr(PbmaxP2   == PmaxF, name='r14')
+# m.addConstr(PbmaxP3   == PmaxF, name='r15')
+# m.addConstr(PbmaxP4   == PmaxF, name='r16')
+# m.addConstr(PbmaxP5   == PmaxF, name='r17')
+# m.addConstr(PbmaxP6   == PmaxF, name='r18')    
 # ─────────────────────────────────────────────────────────────────────────────
 if m.Status == GRB.OPTIMAL:
     print(f"Results:")
@@ -175,7 +186,8 @@ if m.Status == GRB.OPTIMAL:
     print(f"Energy sold to the market (Ws): {Ws.X:,.2f} kWh/year")
     print(f"BESS Energy charged (Wc): {Wc.X:,.2f} kWh/year")
     print(f"BESS Energy discharged (Wd): {Wd.X:,.2f} kWh/year")
-    print(f"PV energy generated (wpv): {wpv.X:,.2f} kWh/year")
+    print(f"PV energy generated (wpvmx): {wpvmx.X:,.2f} kWh/year")
+    print(f"PV energy injected (wpv): {wpv.X:,.2f} kWh/year")
     print(f"PV energy curtailed (Wcurtail): {wcurtail.X:,.2f} kWh/year")
     print(f"Initial SOC:  {SOC0.X:,.2f} MWh")
     print(f"BESS C-rate:  {Crate:,.2f} 1/s")
