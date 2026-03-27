@@ -138,6 +138,17 @@ m.addConstr(PinverterBESS <= C*2.0)
 m.addConstr(PinverterBESS >= C*0.1)
 m.addConstr(nx == 1000*Ppvinst/(Rmax*eta*Area))
 m.setObjective(npv_var, GRB.MAXIMIZE)
+#m.addConstr(Wb <= 0.12*Wl) 
+#m.addConstr(Ws == 0.00*Wl)
+# m.addConstr(C == 17000, name='r10')
+# m.addConstr(PinverterBESS == 2, name='r11')
+# m.addConstr(Ppvinst    == 6000, name='r12')
+# m.addConstr(PbmaxP1   == PmaxF, name='r13')
+# m.addConstr(PbmaxP2   == PmaxF, name='r14')
+# m.addConstr(PbmaxP3   == PmaxF, name='r15')
+# m.addConstr(PbmaxP4   == PmaxF, name='r16')
+# m.addConstr(PbmaxP5   == PmaxF, name='r17')
+# m.addConstr(PbmaxP6   == PmaxF, name='r18')  
 m.optimize()
 Crate = PinverterBESS.X/C.X #resulting BESS Crate
 BESSinverterCost = CAPEX_BESS_inverter*PinverterBESS.X
@@ -155,17 +166,7 @@ if m.Status == GRB.OPTIMAL:
     try:
         NPER = np.log((CF - i * 0) / (CF + i * (-Io))) / np.log(1 + i) if (CF + i * (-Io)) > 0 else 0
     except: NPER = 0
-#m.addConstr(Wb <= 0.12*Wl) 
-#m.addConstr(Ws == 0.00*Wl)
-#m.addConstr(C == 17, name='r10')
-# m.addConstr(PinverterBESS == 2, name='r11')
-#m.addConstr(Ppvinst    == 6, name='r12')
-# m.addConstr(PbmaxP1   == PmaxF, name='r13')
-# m.addConstr(PbmaxP2   == PmaxF, name='r14')
-# m.addConstr(PbmaxP3   == PmaxF, name='r15')
-# m.addConstr(PbmaxP4   == PmaxF, name='r16')
-# m.addConstr(PbmaxP5   == PmaxF, name='r17')
-# m.addConstr(PbmaxP6   == PmaxF, name='r18')    
+  
 # ─────────────────────────────────────────────────────────────────────────────
 if m.Status == GRB.OPTIMAL:
     print(f"Results:")
