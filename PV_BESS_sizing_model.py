@@ -112,6 +112,8 @@ for t in T:
     m.addConstr(Ps[t] <= PmaxF * (1-w3[t]))
     m.addConstr(SOC[t] <= ((1-DoD)/2 + DoD)*C)
     m.addConstr(SOC[t] >= ((1-DoD)/2)*C)
+m.addConstr(SOC0 <= ((1-DoD)/2 + DoD)*C)
+m.addConstr(SOC0 >= ((1-DoD)/2)*C)    
 # FINANCIAL EQUATIONS
 m.addConstr(Es == er*(quicksum(data[t]['lambda'] * Ps[t] for t in T)))
 m.addConstr(Eb == er*(quicksum((data[t]['lambda'] + data[t]['psi']) * Pb[t] for t in T)))
