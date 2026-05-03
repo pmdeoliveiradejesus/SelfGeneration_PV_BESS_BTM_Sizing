@@ -49,10 +49,9 @@ Plinst  = 1000.0                    # kW peak/installed Load DataCenter
 #Plinst  = 630.620646500000         # kW peak/installed load Industry 2
 Rmax   = 1000                       # W/m2
 Area   = 2.4                        # Area module 500W
-eta    = 0.2094                     # PV module efficiency
+eta    = 0.2094                     # PV module efficiency (new modules)
 eff_c  = 0.9624                     # BESS charge inverter efficiency
 eff_d  = 0.9624                     # BESS discharge inverter efficiency
-eff_pv = 1.0                    # PV inverter efficiency
 DoD    = 0.90                       # Depth of Discharge
 PmaxF   = Plinst                    # límit frontier export/import
 er = 1.1 # (exchange rate 1 Eur = 1.1 USD, average 2024)
@@ -100,7 +99,7 @@ m.addConstr(Pbmax[6] == PmaxF)
 for p in range(1, 6): m.addConstr(Pbmax[p+1] >= Pbmax[p])
 for t in T:
     m.addConstr(Pd[t] + Pb[t] + Ppv[t] == Pc[t] + Ps[t] + Plinst * data[t]['Plu'])
-    m.addConstr(Ppvmx[t] == Ppvinst * eff_pv * data[t]['Ppvu']) 
+    m.addConstr(Ppvmx[t] == Ppvinst  * data[t]['Ppvu']) 
     if t == 1:
         m.addConstr(SOC[t] == SOC0 + Pc[t]*eff_c - Pd[t]/eff_d)
     else:
@@ -129,13 +128,13 @@ m.addConstr(Investment0 == BoP + Sc * (CAPEX_pv*Ppvinst + CAPEX_BESS*C + CAPEX_i
 m.addConstr(npv_var == 1*CashFlow_var/(crfe) - 1*Investment0)
 # ENERGY DISPATCH
 m.addConstr(wpv == quicksum(Ppv[t] for t in T))
-m.addConstr(wpvmx == (1/eff_pv)*quicksum(Ppvmx[t] for t in T))
+m.addConstr(wpvmx == quicksum(Ppvmx[t] for t in T))
 m.addConstr(Wb == quicksum(Pb[t] for t in T))
 m.addConstr(Ws == quicksum(Ps[t] for t in T))
 m.addConstr(Wc == quicksum(Pc[t] for t in T))
 m.addConstr(Wd == quicksum(Pd[t] for t in T))
 m.addConstr(Wl == sum(Plinst * data[t]['Plu'] for t in T))
-m.addConstr(wclipping == wpvmx/eff_pv - wpv)
+m.addConstr(wclipping == wpvmx - wpv)
 m.addConstr(PinverterBESS <= C*2.0)
 m.addConstr(PinverterBESS >= C*0.1)
 m.addConstr(nx == 1000*Ppvinst/(Rmax*eta*Area))
