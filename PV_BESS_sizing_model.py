@@ -52,7 +52,7 @@ Area   = 2.4                        # Area module 500W
 eta    = 0.2094                     # PV module efficiency
 eff_c  = 0.9624                     # BESS charge inverter efficiency
 eff_d  = 0.9624                     # BESS discharge inverter efficiency
-eff_pv = 0.9624                     # PV inverter efficiency
+eff_pv = 1.0                    # PV inverter efficiency
 DoD    = 0.90                       # Depth of Discharge
 PmaxF   = Plinst                    # límit frontier export/import
 er = 1.1 # (exchange rate 1 Eur = 1.1 USD, average 2024)
@@ -60,9 +60,9 @@ BoP = 0  # Balance of Plant, USD
 Sc=1.2 # Soft costs, %
 OaMpv = 12.5  #USD/kWp
 OaMbess = 5.9    #USD/kWp
-CAPEX_pv = 436 #USD/kWp
+CAPEX_pv = 388 #USD/kWp
 CAPEX_BESS = 185 #USD/kWh
-CAPEX_BESS_inverter = 48 #USD/kWp
+CAPEX_inverter = 48 #USD/kWp
 i=7.7/100 #annual discount rate (Lazard)
 n=20 #project life span
 e=2.5/100 # escalation rate
@@ -83,11 +83,11 @@ CapacityP = m.addVar(name='Capacity', lb=0); CapacityP0 = m.addVar(name='Capacit
 npv_var = m.addVar(name='npv', lb=-GRB.INFINITY); Benefit = m.addVar(name='Benefit', lb=-GRB.INFINITY)
 OPEX0 = m.addVar(name='OPEX0', lb=-GRB.INFINITY); Eb = m.addVar(name='Eb', lb=0); Eb0 = m.addVar(name='Eb0', lb=0)
 Es = m.addVar(name='Es', lb=0); wpvmx = m.addVar(name='wpvmx', lb=-GRB.INFINITY); wpv = m.addVar(name='wpv', lb=-GRB.INFINITY)
-wcurtail = m.addVar(name='wcurtail', lb=-GRB.INFINITY); Wb = m.addVar(name='Wb', lb=-GRB.INFINITY)
+wclipping = m.addVar(name='wclipping', lb=-GRB.INFINITY); Wb = m.addVar(name='Wb', lb=-GRB.INFINITY)
 Ws = m.addVar(name='Ws', lb=-GRB.INFINITY); Wl = m.addVar(name='Wl', lb=-GRB.INFINITY)
 Wd = m.addVar(name='Wd', lb=-GRB.INFINITY); Wc = m.addVar(name='Wc', lb=-GRB.INFINITY)
 CashFlow_var = m.addVar(name='CashFlow', lb=-GRB.INFINITY); Investment0 = m.addVar(name='Investment', lb=0)
-PinverterBESS = m.addVar(name='PinverterBESS', lb=0); Ppvinst = m.addVar(name='Ppvinst', lb=0)
+PinverterBESS = m.addVar(name='PinverterBESS', lb=0); PinverterPV = m.addVar(name='PinverterPV', lb=0);Ppvinst = m.addVar(name='Ppvinst', lb=0)
 SOC0 = m.addVar(name='SOC0', lb=0); nx = m.addVar(name='nx', lb=0); C = m.addVar(name='C', lb=0)
 Pbmax = {p: m.addVar(lb=0, name=f'PbmaxP{p}') for p in range(1, 7)}
 SOC = m.addVars(T, lb=0, name='SOC'); Ppv = m.addVars(T, lb=0, name='Ppv')
@@ -113,7 +113,7 @@ for t in T:
     m.addConstr(SOC[t] <= ((1-DoD)/2 + DoD)*C)
     m.addConstr(SOC[t] >= ((1-DoD)/2)*C)
 m.addConstr(SOC0 <= ((1-DoD)/2 + DoD)*C)
-m.addConstr(SOC0 >= ((1-DoD)/2)*C)    
+m.addConstr(SOC0 >= ((1-DoD)/2)*C)
 # FINANCIAL EQUATIONS
 m.addConstr(Es == er*(quicksum(data[t]['lambda'] * Ps[t] for t in T)))
 m.addConstr(Eb == er*(quicksum((data[t]['lambda'] + data[t]['psi']) * Pb[t] for t in T)))
@@ -125,8 +125,8 @@ m.addConstr(OPEX == CapacityP + Eb + OaMpv*Ppvinst + OaMbess*C)
 m.addConstr(Savings == OPEX0 - OPEX)
 m.addConstr(Benefit == Es - OPEX)
 m.addConstr(CashFlow_var == Es + OPEX0 - OPEX)
-m.addConstr(Investment0 == BoP + Sc * (CAPEX_pv*Ppvinst + CAPEX_BESS*C + CAPEX_BESS_inverter*PinverterBESS))
-m.addConstr(npv_var == CashFlow_var/(crfe) - Investment0)
+m.addConstr(Investment0 == BoP + Sc * (CAPEX_pv*Ppvinst + CAPEX_BESS*C + CAPEX_inverter*(PinverterBESS+PinverterPV)))
+m.addConstr(npv_var == 1*CashFlow_var/(crfe) - 1*Investment0)
 # ENERGY DISPATCH
 m.addConstr(wpv == quicksum(Ppv[t] for t in T))
 m.addConstr(wpvmx == (1/eff_pv)*quicksum(Ppvmx[t] for t in T))
@@ -135,7 +135,7 @@ m.addConstr(Ws == quicksum(Ps[t] for t in T))
 m.addConstr(Wc == quicksum(Pc[t] for t in T))
 m.addConstr(Wd == quicksum(Pd[t] for t in T))
 m.addConstr(Wl == sum(Plinst * data[t]['Plu'] for t in T))
-m.addConstr(wcurtail == wpvmx/eff_pv - wpv)
+m.addConstr(wclipping == wpvmx/eff_pv - wpv)
 m.addConstr(PinverterBESS <= C*2.0)
 m.addConstr(PinverterBESS >= C*0.1)
 m.addConstr(nx == 1000*Ppvinst/(Rmax*eta*Area))
@@ -144,18 +144,21 @@ m.setObjective(npv_var, GRB.MAXIMIZE)
 #m.addConstr(Ws == 0.00*Wl)
 # m.addConstr(C == 17000, name='r10')
 # m.addConstr(PinverterBESS == 2, name='r11')
-# m.addConstr(Ppvinst    == 6000, name='r12')
-# m.addConstr(PbmaxP1   == PmaxF, name='r13')
-# m.addConstr(PbmaxP2   == PmaxF, name='r14')
-# m.addConstr(PbmaxP3   == PmaxF, name='r15')
-# m.addConstr(PbmaxP4   == PmaxF, name='r16')
-# m.addConstr(PbmaxP5   == PmaxF, name='r17')
-# m.addConstr(PbmaxP6   == PmaxF, name='r18')  
+#m.addConstr(Ppvinst    == 6000, name='r12')
+# m.addConstr(Pbmax[1]   == PmaxF, name='r13')
+# m.addConstr(Pbmax[2]   == PmaxF, name='r14')
+# m.addConstr(Pbmax[3]  == PmaxF, name='r15')
+# m.addConstr(Pbmax[4]  == PmaxF, name='r16')
+# m.addConstr(Pbmax[5]   == PmaxF, name='r17')
+# m.addConstr(Pbmax[6]  == PmaxF, name='r18')
+m.addConstr(PinverterPV == Plinst+PmaxF+PinverterBESS)   
 m.optimize()
 Crate = PinverterBESS.X/C.X #resulting BESS Crate
-BESSinverterCost = CAPEX_BESS_inverter*PinverterBESS.X
+BESSinverterCost = CAPEX_inverter*PinverterBESS.X
+PVinverterCost = CAPEX_inverter*PinverterPV.X
 BESSbatteryCost = CAPEX_BESS*C.X
-PVsystemCost =CAPEX_pv*Ppvinst.X
+PVsystemCost =CAPEX_pv*Ppvinst.X+CAPEX_inverter*PinverterPV.X
+ILR= Ppvinst.X/PinverterPV.X  #MWdc/MWac, DC-to-AC Ratio or Inverter Loading Ratio (ILR)
 if m.Status == GRB.OPTIMAL:
     Io = Investment0.X
     CF = CashFlow_var.X
@@ -172,9 +175,13 @@ if m.Status == GRB.OPTIMAL:
 # ─────────────────────────────────────────────────────────────────────────────
 if m.Status == GRB.OPTIMAL:
     print(f"Results:")
+    print(f"------ System sizing  ------------------")
     print(f"BESS capacity (WbessInst): {C.X:,.2f} kWh")
     print(f"BESS inverter capacity (PbessInst): {PinverterBESS.X:,.2f} kW")
-    print(f"PV System capacity (PpvInst): {Ppvinst.X:,.2f} kW")
+    print(f"BESS C-rate:  {Crate:,.2f} 1/h,  {1/Crate:,.2f}  hours")
+    print(f"PV System capacity (PpvInst): {Ppvinst.X:,.2f} kWdc")
+    print(f"PV System inverter (Ppv_inverter): {PinverterPV.X:,.2f} kWpv")
+    print(f"PV inverter load ratio (ILR, MWdc/MWp): {ILR:,.2f} ")
     print(f"Npan: {nx.X:,.2f} modules of 500W")
     print(f"Contracted power per period")
     print(f"PbmaxP1: {Pbmax[1].X:,.2f} kW")
@@ -191,9 +198,8 @@ if m.Status == GRB.OPTIMAL:
     print(f"BESS Energy discharged (Wd): {Wd.X:,.2f} kWh/year")
     print(f"PV energy generated (wpvmx): {wpvmx.X:,.2f} kWh/year")
     print(f"PV energy injected (wpv): {wpv.X:,.2f} kWh/year")
-    print(f"PV energy curtailed (Wcurtail): {wcurtail.X:,.2f} kWh/year")
+    print(f"PV energy curtailed (Clipping) (Wclipping): {wclipping.X:,.2f} kWh/year")
     print(f"Initial SOC:  {SOC0.X:,.2f} MWh")
-    print(f"BESS C-rate:  {Crate:,.2f} 1/s")
     print(f"------Financial results--------------------")   
     print(f"Operational Benefit: {Benefit.X:,.2f} USD/year")
     print(f"Operational Expenditure with the project (OPEX): {OPEX.X:,.2f} USD/year")
@@ -207,9 +213,10 @@ if m.Status == GRB.OPTIMAL:
     print(f"Capital Expenditure (CAPEX): {Investment0.X:,.2f} USD")
     print(f"BESS battery cost: {BESSbatteryCost:,.2f} USD")
     print(f"BESS inverter cost: {BESSinverterCost:,.2f} USD")
+    print(f"PV inverter cost: {PVinverterCost:,.2f} USD")
     print(f"Soft Costs: {Investment0.X*(Sc-1):,.2f} USD")
     print(f"PV system cost: {PVsystemCost:,.2f} USD")
-    print(f"Net Present Value: {npv_var.X:,.2f} USD")
+    print(f"Net Present Value: {npv_var.X:,.2f} USD  (Objective)")
     print(f"Project Cash Flow: {CF:,.2f} USD/year")
     print(f"Internal Rate of Return:      {TIR:,.2f} %")
     print(f"Pay Back Time:     {NPER:,.2f} years")
@@ -224,18 +231,54 @@ if m.status == gp.GRB.OPTIMAL:
     with open('solution_sizing_model.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         # Write the header
-        writer.writerow(["Hour", "Pb", "Ps", "Pc", "Pd", "SOC",	
-"Benefit","npv" ])
+        writer.writerow(["Hour", "Pb", "Ppv", "Pd", "Ppvmax", "Ps", "Pc", "SOC",	
+"SpotPrice","npv" ])
         # Write each hour's data
         for t in T:
             writer.writerow([
                 t,
                 Pb[t].X,
+                Ppv[t].X,
+                Pd[t].X,
+                Ppvmx[t].X,
                 Ps[t].X,
                 Pc[t].X,
-                Pd[t].X,
                 SOC[t].X,
-                Benefit.X,
+                data[t]['lambda'],
                 npv_var.X
             ])
-    print("Solution written to solution_sizing_model.csv")    
+    print("Solution written to solution_sizing_model.csv") 
+    
+    with open('solution_daily_summary.csv', 'w', newline='') as csvfile_daily:
+        writer_daily = csv.writer(csvfile_daily)
+        # Encabezados (Suma de energía diaria para potencias, Promedio para SOC)
+        writer_daily.writerow(["Day", "Pb_Sum", "Ppv_Sum", "Pd_Sum", "Ppvmax_Sum", "Ps_Sum", "Pc_Sum", "SOC_Avg", "Benefit", "npv"])
+        
+        # Iterar sobre los 365 días
+        for d in range(365):
+            day_hours = range(d * 24 + 1, (d + 1) * 24 + 1)
+            
+            # Calculamos las sumas para las variables de flujo/potencia
+            pb_sum = sum(Pb[t].X for t in day_hours)
+            ppv_sum = sum(Ppv[t].X for t in day_hours)
+            pd_sum = sum(Pd[t].X for t in day_hours)
+            ppvmax_sum = sum(Ppvmx[t].X for t in day_hours)
+            ps_sum = sum(Ps[t].X for t in day_hours)
+            pc_sum = sum(Pc[t].X for t in day_hours)
+            
+            # Calculamos el promedio para el Estado de Carga (SOC)
+            soc_avg = sum(SOC[t].X for t in day_hours) / 24
+            
+            writer_daily.writerow([
+                d + 1,      # Día
+                pb_sum,     # kWh/día comprados
+                ppv_sum,    # kWh/día PV usados
+                pd_sum,     # kWh/día descargados BESS
+                ppvmax_sum, # kWh/día PV disponibles
+                ps_sum,     # kWh/día vendidos
+                pc_sum,     # kWh/día cargados BESS
+                soc_avg,    # % promedio o kWh promedio en BESS
+                Benefit.X,  # Valor constante del proyecto
+                npv_var.X   # Valor constante del proyecto
+            ])
+    print("Daily summary written to solution_daily_summary.csv")
