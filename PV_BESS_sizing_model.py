@@ -33,9 +33,9 @@ paths = {
       'Plu'     : 'PluDataCenter.inc',    # DataCenter load factor = 1
 # ----------------------
 #    Spanish Electricity Market    
-       'lambda'  : 'lambda.inc', # 8760h 2024 Spanish Spot prices Eur/MWh
+       'lambda'  : 'lambda_spain_localtime.inc', # 8760h 2024 Spanish Spot prices Eur/MWh
        'psi'     : 'psi.inc', # Tariff of Use of the network Eur/MWh
-       'Ppvu'    : 'PpvuMadridSarah20052023.inc',  # Perfil Solar Madrid España Sarah 2005-2023
+       'Ppvu'    : 'PpvuMadridSarah20052023_localtime.inc',  # Perfil Solar Madrid España Sarah 2005-2023
        "periodo" : "periodo.inc",  # calendar to assingn type of contracted power 1..6 per each hour
 # ----------------------
 }
