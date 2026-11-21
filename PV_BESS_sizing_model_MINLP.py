@@ -7,6 +7,9 @@ Optimal Sizing + BESS + PV  ─ Case 8760h
 MINLP version (bilinear constraints (11)-(12)), solved with Gurobi.
 CASE = 'optimal' : NPV-maximizing sizing (J. Energy Storage 180 (2026) 124014)
 CASE = 'ember'   : Ember configuration (6000 kWp, 17000 kWh, no exports, imports <= 12 % of the load)
+CASE = 'ember_island' : Ember configuration in island (no purchases, no sales); unserved load allowed and
+                  minimized (penalty VOLL); cyclic SOC constraint active. Reproduces the Ember report LCOE
+                  when the asset cost is divided by the served energy.
 """
 import numpy as np
 import numpy_financial as npf
@@ -47,7 +50,7 @@ T = range(1, 8761)
 data = {t: {'lambda': series['lambda'].get(t, 0.0), 'Plu': series['Plu'].get(t, 0.0),
             'psi': series['psi'].get(t, 0.0), 'Ppvu': series['Ppvu'].get(t, 0.0)} for t in T}
 periodo = {t: int(series["periodo"].get(t, 6)) for t in T}
-CASE = 'optimal'                    # 'optimal' or 'ember'
+CASE = 'optimal'                    # 'optimal', 'ember' or 'ember_island'
 Plinst  = 1000.0                    # kW peak/installed Load DataCenter
 #Plinst  = 564.3                    # kW peak/installed load Industry 1
 #Plinst  = 630.620646500000         # kW peak/installed load Industry 2
@@ -101,12 +104,13 @@ SOC = m.addVars(T, lb=0, name='SOC'); Ppv = m.addVars(T, lb=0, name='Ppv')
 Ppvmx = m.addVars(T, lb=0, name='Ppvmx'); Pd = m.addVars(T, lb=0, name='Pd')
 Pc = m.addVars(T, lb=0, name='Pc'); Pb = m.addVars(T, lb=0, name='Pb'); Ps = m.addVars(T, lb=0, name='Ps')
 w1 = m.addVars(T, vtype=GRB.BINARY, name='w1'); w3 = m.addVars(T, vtype=GRB.BINARY, name='w3')
+U = m.addVars(T, lb=0, name='U'); Wu = m.addVar(name='Wu', lb=0)   # unserved load (ember_island case only)
 # Constraints
 m.addConstrs((Pbmax[periodo[t]] >= Pb[t] for t in T), "res_Pbmax")
 m.addConstr(Pbmax[6] == PmaxF)
 for p in range(1, 6): m.addConstr(Pbmax[p+1] >= Pbmax[p])
 for t in T:
-    m.addConstr(Pd[t] + Pb[t] + Ppv[t] == Pc[t] + Ps[t] + Plinst * data[t]['Plu'])
+    m.addConstr(Pd[t] + Pb[t] + Ppv[t] + U[t] == Pc[t] + Ps[t] + Plinst * data[t]['Plu'])
     m.addConstr(Ppvmx[t] == Ppvinst  * data[t]['Ppvu']) 
     if t == 1:
         m.addConstr(SOC[t] == SOC0 + Pc[t]*eff_c - Pd[t]/eff_d)
@@ -150,7 +154,9 @@ m.addConstr(wclipping == wpvmx - wpv)
 m.addConstr(PinverterBESS <= C*2.0)
 m.addConstr(PinverterBESS >= C*0.1)
 m.addConstr(nx == 1000*Ppvinst/(Rmax*eta*Area))
-m.setObjective(npv_var, GRB.MAXIMIZE)
+m.addConstr(Wu == quicksum(U[t] for t in T))
+VOLL = 100.0 if CASE == 'ember_island' else 0.0  # USD/kWh penalty on unserved load
+m.setObjective(npv_var - VOLL*Wu, GRB.MAXIMIZE)
 #m.addConstr(Wb <= 0.12*Wl) 
 #m.addConstr(Ws == 0.00*Wl)
 # m.addConstr(C == 17000, name='r10')
@@ -163,6 +169,12 @@ m.setObjective(npv_var, GRB.MAXIMIZE)
 # m.addConstr(Pbmax[5]   == PmaxF, name='r17')
 # m.addConstr(Pbmax[6]  == PmaxF, name='r18')
 m.addConstr(PinverterPV == Plinst+PmaxF+PinverterBESS)   
+if CASE == 'ember_island':          # Ember in island: fixed sizes, no grid trading, unserved load allowed
+    m.addConstr(C == 17000, name='ember_C'); m.addConstr(Ppvinst == 6000, name='ember_PV')
+    m.addConstr(Wb == 0, name='island_nobuy'); m.addConstr(Ws == 0, name='island_nosell')
+    m.addConstr(SOC[T[-1]] >= SOC0, name='soc_cyclic')
+else:
+    m.addConstrs((U[t] == 0 for t in T), name='no_unserved')
 if CASE == 'ember':                 # Ember benchmark: fixed sizes, no exports, deficit <= 12 % of the load
     m.addConstr(C == 17000, name='ember_C')
     m.addConstr(Ppvinst == 6000, name='ember_PV')
@@ -266,6 +278,8 @@ if m.Status == GRB.OPTIMAL:
     print(f"Grid-only LCOE 0 (no project, Wl):                         {LCOE0:,.2f} USD/MWh")
     print(f"Net LCOE 1 (= -NPV*crf/Wl = Supply - LCOE 0):              {LCOEnet1:,.2f} USD/MWh")
     print(f"Net LCOE 2 (= Supply LCOE):                                {LCOEnet2:,.2f} USD/MWh")
+    print(f"Unserved load (Wu): {Wu.X:,.2f} kWh/year, served {100*(1-Wu.X/Wl.X):,.2f} % of the load energy")
+    print(f"Asset LCOE over served energy (Ember definition):          {1000*(Io + OPEXgross/crfe)*crf/(Wl.X-Wu.X):,.2f} USD/MWh")
     print(f"Benefit-Cost Ratio (constant cash flow) {BCratio:,.2f}")
     print(f"Benefit-Cost Ratio (escalated cash flow) {BCratioe:,.2f}")  
     # Summary of all results, for tables
@@ -290,7 +304,8 @@ if m.Status == GRB.OPTIMAL:
         ("Benefit-cost ratio constant CF", BCratio, "-"), ("Benefit-cost ratio escalated CF", BCratioe, "-"),
         ("Asset LCOE 1 (Wl)", LCOEgross, "USD/MWh"), ("Asset LCOE 2 (wpv)", LCOEgross2, "USD/MWh"),
         ("Asset LCOE 3 (wpvmx)", LCOEgross3, "USD/MWh"), ("Supply LCOE (Wl)", LCOEsupply, "USD/MWh"),
-        ("Grid-only LCOE 0 (Wl)", LCOE0, "USD/MWh"), ("Net LCOE 1 (Wl)", LCOEnet1, "USD/MWh"),
+        ("Grid-only LCOE 0 (Wl)", LCOE0, "USD/MWh"), ("Unserved load Wu", Wu.X, "kWh/yr"),
+        ("Asset LCOE over served energy", 1000*(Io + OPEXgross/crfe)*crf/(Wl.X-Wu.X), "USD/MWh"), ("Net LCOE 1 (Wl)", LCOEnet1, "USD/MWh"),
         ("Net LCOE 2 (Wl)", LCOEnet2, "USD/MWh"),
         ("crf", crf, "-"), ("crfe", crfe, "-"),
     ]
