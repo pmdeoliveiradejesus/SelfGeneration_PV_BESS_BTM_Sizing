@@ -164,8 +164,13 @@ if m.Status == GRB.OPTIMAL:
     TIR = npf.irr([-Io] + [CF]*n) * 100 if Io > 0 else 0
     BCratio = npf.pv(rate=i, nper=n, pmt=-CF, fv=0) / Io if Io > 0 else 0
     OPEXgross = OaMpv*Ppvinst.X + OaMbess*C.X
-    LCOEgross = 1000*(Io + OPEXgross/crfe)/(Wl.X/crf) if Wl.X > 0 else 0
-    LCOEnet = 1000*(Io + (OPEX.X - OPEX0.X - Es.X)/crfe)/(Wl.X/crf) if Wl.X > 0 else 0
+    LCOEgross = 1000*(Io + OPEXgross/crfe)/(Wl.X/crf) if Wl.X > 0 else 0 # LCOE for assets 1 USD/MWh
+    LCOEgross2 = 1000*(Io + OPEXgross/crfe)/(wpv.X/crf) if wpv.X > 0 else 0 # LCOE for assets 2 USD/MWh
+    Eg=CapacityP.X + Eb.X;
+    LCOEsupply = LCOEgross+1000*(crf*(Eg-Es.X)/(crfe*Wl.X)) if Wl.X > 0 else 0 # LCOE for supply 2 USD/MWh
+    LCOE0=1000*OPEX0.X*crf/(Wl.X*crfe) #levelize cost of electricity withou the project (quivalent purchasuing price, including capacity charges)
+    LCOEnet1 = 1000*(Io + (OPEX.X - OPEX0.X - Es.X)/crfe)/(Wl.X/crf) if Wl.X > 0 else 0
+    LCOEnet2 = 1000*(Io + (OPEX.X           - Es.X)/crfe)/(Wl.X/crf) if Wl.X > 0 else 0
     NPERaprox = Io/CF if CF > 0 else 0
     try:
         NPER = np.log((CF - i * 0) / (CF + i * (-Io))) / np.log(1 + i) if (CF + i * (-Io)) > 0 else 0
@@ -220,8 +225,12 @@ if m.Status == GRB.OPTIMAL:
     print(f"Internal Rate of Return:      {TIR:,.2f} %")
     print(f"Pay Back Time:     {NPER:,.2f} years")
     print(f"Simple Pay Back Time:    {NPERaprox:,.2f} years")
-    print(f"Net LCOE (include earnings and savings):     {LCOEnet:,.2f} USD/MWh")
-    print(f"Gross LCOE: (only CAPEX and OPEX)    {LCOEgross:,.2f} USD/MWh")
+    print(f"Net LCOE 1 (include earnings and savings):     {LCOEnet1:,.2f} USD/MWh")
+    print(f"Net LCOE 2 (include only earnings):     {LCOEnet2:,.2f} USD/MWh")
+    print(f"Base LCOE 0: (no project, load energy)    {LCOE0:,.2f} USD/MWh")
+    print(f"Gross LCOE 1: (only CAPEX and OPEX, load energy)    {LCOEgross:,.2f} USD/MWh")
+    print(f"Gross LCOE 2: (only CAPEX and OPEX, PV supplied energy)    {LCOEgross2:,.2f} USD/MWh")
+    print(f"Supplied LCOE: (only CAPEX and OPEX, load energy, payments)    {LCOEsupply:,.2f} USD/MWh")
     print(f"Benefit-Cost Ratio {BCratio:,.2f}")  
 else:
     print("N optimal solution, state code:", m.Status)
