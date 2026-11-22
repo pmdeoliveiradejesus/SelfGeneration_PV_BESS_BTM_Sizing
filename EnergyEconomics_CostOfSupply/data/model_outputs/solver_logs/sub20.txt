@@ -1,0 +1,72 @@
+Restricted license - for non-production use only - expires 2028-11-29
+Running HiGHS 1.16.0 (git hash: f3f113d): Copyright (c) 2026 under MIT licence terms
+Includes third-party software components, see THIRD_PARTY_NOTICES.md for full details
+HiGHS LP relaxation: Optimal, objective 4,785,803.44, 36.8 s
+HiGHS MILP: Optimal, objective 4,785,803.44, bound 4,785,803.44, gap 0.0000 %, total time 71.1 s
+Results:
+------ System sizing  ------------------
+BESS capacity (WbessInst): 13,544.72 kWh
+BESS inverter capacity (PbessInst): 2,305.98 kW
+BESS C-rate:  0.17 1/h,  5.87  hours
+PV System capacity (PpvInst): 7,371.10 kWdc
+PV System inverter (Ppv_inverter): 4,305.98 kWpv
+PV inverter load ratio (ILR, MWdc/MWp): 1.71 
+Npan: 14,667.10 modules of 500W
+Contracted power per period
+PbmaxP1: 0.00 kW
+PbmaxP2: 0.00 kW
+PbmaxP3: 0.00 kW
+PbmaxP4: 0.00 kW
+PbmaxP5: -0.00 kW
+PbmaxP6: 1,000.00 kW
+------Energy Dispatch--------------------
+Energy load consumption (Wl): 8,760,000.00 kWh/year
+Energy bought from the market (Wb): 1,596,363.20 kWh/year
+Energy sold to the market (Ws): 2,704,755.96 kWh/year
+BESS Energy charged (Wc): 4,577,093.03 kWh/year
+BESS Energy discharged (Wd): 4,251,098.45 kWh/year
+PV energy generated (wpvmx): 11,361,567.59 kWh/year
+PV energy used after clipping (wpv): 10,194,387.35 kWh/year
+PV energy curtailed (Clipping) (Wclipping): 1,167,180.24 kWh/year
+Initial SOC:  12,867.49 kWh
+Final SOC:    677.24 kWh
+------Financial results--------------------
+Operational Benefit: -124,924.96 USD/year
+Operational Expenditure with the project (OPEX): 320,979.83 USD/year
+Operational Expenditure without the project (OPEX_0): 972,517.75 USD/year
+Operational Savings (Savings): 651,537.93 USD/year
+Energy expenses with the project (Eb): 147,919.54 USD/year
+Energy expenses without the project (Eb0): 908,223.12 USD/year
+Energy earnings of the project (Es): 196,054.87 USD/year
+Capacity Charges (CP): 1,007.70 USD/year
+Capacity Charges without the project (CP0): 64,294.64 USD/year
+Capital Expenditure (CAPEX): 6,819,760.64 USD
+BESS battery cost: 2,505,773.84 USD
+BESS inverter cost: 110,687.12 USD
+PV inverter cost: 206,687.12 USD
+PV modules cost: 2,859,985.78 USD
+Soft Costs: 1,136,626.77 USD
+PV system cost (modules + PV inverter): 3,066,672.91 USD
+Net Present Value: 4,785,803.44 USD  (Objective)
+Project Cash Flow: 847,592.80 USD/year
+Internal Rate of Return (constant cash flow):      10.84 %
+Internal Rate of Return (escalated cash flow):     13.23 %
+Simple Pay Back Time:    8.05 years
+Discounted Pay Back Time (constant cash flow):     13.03 years
+Discounted Pay Back Time (escalated cash flow):    10.95 years
+------Levelized costs (USD/MWh)------------
+Backup charge (Cresp): 0.00 USD/year
+Asset LCOE 1 (CAPEX and O&M, load energy Wl):              101.17 USD/MWh
+Asset LCOE 2 (CAPEX and O&M, PV energy used wpv):          86.93 USD/MWh
+Asset LCOE 3 (CAPEX and O&M, PV energy generated wpvmx):   78.00 USD/MWh
+Supply LCOE (asset LCOE 1 + net grid cost, Wl):            94.69 USD/MWh
+Grid-only LCOE 0 (no project, Wl):                         133.59 USD/MWh
+Net LCOE 1 (= -NPV*crf/Wl = Supply - LCOE 0):              -38.90 USD/MWh
+Net LCOE 2 (= Supply LCOE):                                94.69 USD/MWh
+Unserved load (Wu): 0.00 kWh/year, served 100.00 % of the load energy
+Asset LCOE over served energy (Ember definition):          101.17 USD/MWh
+Benefit-Cost Ratio (constant cash flow) 1.25
+Benefit-Cost Ratio (escalated cash flow) 1.50
+Summary written to results_summary_sub20.csv
+Solution written to solution_sizing_model.csv
+Daily summary written to solution_daily_summary.csv

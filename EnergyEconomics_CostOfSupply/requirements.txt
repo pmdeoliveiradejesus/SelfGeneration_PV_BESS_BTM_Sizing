@@ -1,0 +1,7 @@
+numpy>=1.24
+pandas>=2.0
+matplotlib>=3.7
+# model/ only:
+# gurobipy
+# highspy==1.16.0
+# numpy-financial

@@ -1,0 +1,189 @@
+CRF = 0.099589, CRF_e = 0.082760, CRF/CRF_e = 1.20335
+Check                                                              Computed     Reported  Result
+E_b0 from inputs [USD/yr]                                       908223.1170  908223.0000  PASS
+CP_0 from inputs [USD/yr]                                        64295.0000   64295.0000  PASS
+Hours with zero price                                              532.0000     532.0000  PASS
+Hours with negative price                                          247.0000     247.0000  PASS
+NPV-maximizing: asset LCOE vs model output                          77.5128      77.5128  PASS
+NPV-maximizing: LCOE_s vs model output                              92.3990      92.3990  PASS
+NPV-maximizing: NPV vs model output [USD]                      3623548.5148 3623548.5148  PASS
+Fixed capacity: asset LCOE vs model output                          70.7364      70.7364  PASS
+Fixed capacity: LCOE_s vs model output                             100.5359     100.5359  PASS
+Fixed capacity: NPV vs model output [USD]                      2907809.2505 2907809.2505  PASS
+Ember: asset LCOE vs model output                                  103.1267     103.1267  PASS
+Ember: LCOE_s vs model output                                      112.1658     112.1658  PASS
+Ember: NPV vs model output [USD]                               1884832.2978 1884832.2978  PASS
+Table 5 opt PV                                                       6.1082       6.1000  PASS
+Table 5 opt C                                                        9.3287       9.3000  PASS
+Table 5 opt Wb                                                    2431.9581    2432.0000  PASS
+Table 5 opt Ws                                                    2011.2081    2011.0000  PASS
+Table 5 opt I0                                                       5.2305       5.2300  PASS
+Table 5 opt NPV                                                      3.6235       3.6200  PASS
+Table 5 opt IRR                                                     12.7352      12.7000  PASS
+Table 5 opt IRRe                                                    15.1406      15.1000  PASS
+Table 5 opt LCOE                                                    77.5128      77.5000  PASS
+Table 5 opt G                                                       31.8978      31.9000  PASS
+Table 5 opt S                                                       17.0116      17.0000  PASS
+Table 5 opt LS                                                      92.3990      92.4000  PASS
+Table 5 opt L0                                                     133.5937     133.6000  PASS
+Table 5 opt V                                                       41.1947      41.2000  PASS
+Table 5 noc PV                                                       5.7489       5.7000  PASS
+Table 5 noc C                                                        8.1190       8.1000  PASS
+Table 5 noc Wb                                                    2770.7174    2771.0000  PASS
+Table 5 noc Ws                                                    1896.1886    1896.0000  PASS
+Table 5 noc I0                                                       4.7750       4.7700  PASS
+Table 5 noc NPV                                                      2.9078       2.9100  PASS
+Table 5 noc IRR                                                     11.9140      11.9000  PASS
+Table 5 noc IRRe                                                    14.3128      14.3000  PASS
+Table 5 noc LCOE                                                    70.7364      70.7000  PASS
+Table 5 noc G                                                       45.4052      45.4000  PASS
+Table 5 noc S                                                       15.6056      15.6000  PASS
+Table 5 noc LS                                                     100.5359     100.5000  PASS
+Table 5 noc L0                                                     133.5937     133.6000  PASS
+Table 5 noc V                                                       33.0577      33.1000  PASS
+Table 5 emb PV                                                       6.0000       6.0000  PASS
+Table 5 emb C                                                       17.0000      17.0000  PASS
+Table 5 emb Wb                                                     664.5294     665.0000  PASS
+Table 5 emb Ws                                                       0.0000       0.0000  PASS
+Table 5 emb I0                                                       6.9530       6.9500  PASS
+Table 5 emb NPV                                                      1.8848       1.8800  PASS
+Table 5 emb IRR                                                      8.4380       8.4000  PASS
+Table 5 emb IRRe                                                    10.8048      10.8000  PASS
+Table 5 emb LCOE                                                   103.1267     103.1000  PASS
+Table 5 emb G                                                        9.0390       9.0000  PASS
+Table 5 emb S                                                        0.0000       0.0000  PASS
+Table 5 emb LS                                                     112.1658     112.2000  PASS
+Table 5 emb L0                                                     133.5937     133.6000  PASS
+Table 5 emb V                                                       21.4279      21.4000  PASS
+Ember island: share of load served [%]                              92.4641      92.5000  PASS
+Ember island: asset LCOE per MWh served                            112.2239     112.2000  PASS
+Ember: asset LCOE per MWh of load                                  103.1267     103.1000  PASS
+LCOE_s / LCOE_0, NPV-maximizing [%]                                 69.1642      69.0000  PASS
+Share of load bought from the grid [%]                              27.7621      28.0000  PASS
+Ratio V(opt)/V(Ember)                                                1.9225       1.9200  PASS
+Supply cost below grid, Ember [%]                                   16.0396      16.0000  PASS
+Floor A: optimal minus Ember                                        19.7668      19.8000  PASS
+Capacity charges, fixed contract [kUSD/yr]                          64.2946      64.0000  PASS
+Capacity charges, optimal [kUSD/yr]                                  1.0077       1.0000  PASS
+alpha such that pi_p = 114 (Eq. 11)                                  0.5244       0.5200  PASS
+LCOE_s minus asset LCOE, NPV-maximizing                             14.8862      14.9000  PASS
+LCOE_s: fixed capacity minus optimal                                 8.1370       8.1000  PASS
+Asset LCOE: Ember minus optimal                                     25.6139      25.6000  PASS
+G: optimal minus Ember                                              22.8587      22.9000  PASS
+G: fixed capacity minus optimal                                     13.5074      13.5000  PASS
+LCOE + G (threshold for negative LCOE_s)                           109.4106     109.4000  PASS
+Battery charge at zero/negative prices [MWh]                       756.9146     757.0000  PASS
+PV curtailed at zero/negative prices [MWh]                         622.9723     623.0000  PASS
+Purchases at zero prices [MWh]                                      76.5126      77.0000  PASS
+Exports at zero/negative prices [MWh]                                0.0000       0.0000  PASS
+Table 6 NPV-maximizing Floor A.                                     92.3990      92.4000  PASS
+Table 6 NPV-maximizing Floor B.                                     60.5012      60.5000  PASS
+Table 6 NPV-maximizing Floor C.                                     77.5128      77.5000  PASS
+Table 6 NPV-maximizing Ceiling A.                                  133.5937     133.6000  PASS
+Table 6 NPV-maximizing Ceiling B.                                  101.6959     101.7000  PASS
+Table 6 NPV-maximizing Ceiling C.                                  118.7075     118.7000  PASS
+Table 6 NPV-maximizing Price, alpha = 0.5 A.                       112.9963     113.0000  PASS
+Table 6 NPV-maximizing Price, alpha = 0.5 B.                        81.0986      81.1000  PASS
+Table 6 NPV-maximizing Price, alpha = 0.5 C.                        98.1102      98.1000  PASS
+Table 6 Fixed capacity contract Floor A.                           100.5359     100.5000  PASS
+Table 6 Fixed capacity contract Floor B.                            55.1308      55.1000  PASS
+Table 6 Fixed capacity contract Floor C.                            70.7364      70.7000  PASS
+Table 6 Fixed capacity contract Ceiling A.                         133.5937     133.6000  PASS
+Table 6 Fixed capacity contract Ceiling B.                          88.1885      88.2000  PASS
+Table 6 Fixed capacity contract Ceiling C.                         103.7941     103.8000  PASS
+Table 6 Ember configuration Floor A.                               112.1658     112.2000  PASS
+Table 6 Ember configuration Floor B.                               103.1267     103.1000  PASS
+Table 6 Ember configuration Floor C.                               103.1267     103.1000  PASS
+Table 6 Ember configuration Ceiling A.                             133.5937     133.6000  PASS
+Table 6 Ember configuration Ceiling B.                             124.5546     124.6000  PASS
+Table 6 Ember configuration Ceiling C.                             124.5546     124.6000  PASS
+Developer NPV with alpha = 0.5 [MUSD]                                1.8118       1.8100  PASS
+Subsidized NPV vs model objective [USD]                        5537814.7540 5537814.7540  PASS
+Table 7 Subsidy, same design Z                                      17.8391      17.8000  PASS
+Table 7 Subsidy, same design Private LCOE_s                         74.5599      74.6000  PASS
+Table 7 Subsidy, same design Private NPV [MUSD]                      5.1927       5.1900  PASS
+Table 7 Subsidy, same design Floor B                                42.6621      42.7000  PASS
+Table 7 Subsidy, same design Floor C                                59.6737      59.7000  PASS
+Table 7 Subsidy, same design Subsidy [MUSD]                          1.5692       1.5700  PASS
+Table 7 Subsidy, re-optimized PV [MWp]                               8.4840       8.5000  PASS
+Table 7 Subsidy, re-optimized Battery [MWh]                         17.1114      17.1000  PASS
+Table 7 Subsidy, re-optimized Purchases [MWh/yr]                   962.2226     962.0000  PASS
+Table 7 Subsidy, re-optimized Exports [MWh/yr]                    3355.6028    3356.0000  PASS
+Table 7 Subsidy, re-optimized CAPEX [MUSD]                           8.1955       8.2000  PASS
+Table 7 Subsidy, re-optimized Subsidy [MUSD]                         2.4586       2.4600  PASS
+Table 7 Subsidy, re-optimized Asset LCOE                           121.6074     121.6000  PASS
+Table 7 Subsidy, re-optimized G                                     12.4347      12.4000  PASS
+Table 7 Subsidy, re-optimized S                                     35.4543      35.5000  PASS
+Table 7 Subsidy, re-optimized Z                                     27.9513      28.0000  PASS
+Table 7 Subsidy, re-optimized Private LCOE_s                        70.6364      70.6000  PASS
+Table 7 Subsidy, re-optimized Social LCOE_s (Z=0)                   98.5877      98.6000  PASS
+Table 7 Subsidy, re-optimized Private NPV [MUSD]                     5.5378       5.5400  PASS
+Table 7 Subsidy, re-optimized Social NPV [MUSD]                      3.0792       3.0800  PASS
+Table 7 Subsidy, re-optimized Floor B                               58.2018      58.2000  PASS
+Table 7 Subsidy, re-optimized Ceiling B                            121.1590     121.2000  PASS
+Table 7 Subsidy, re-optimized Floor C                               93.6561      93.7000  PASS
+Table 7 Subsidy, re-optimized Ceiling C                            156.6133     156.6000  PASS
+Deadweight loss [MUSD], Eq. (9)                                      0.5444       0.5400  PASS
+Deadweight loss / subsidy [%]                                       22.1412      22.0000  PASS
+Private gain [MUSD]                                                  1.9143       1.9100  PASS
+DWL via Eq. (9) equals NPV difference                           544372.4668  544372.4668  PASS
+Sweep 10 %: DWL [MUSD]                                               0.0376       0.0400  PASS
+Sweep 10 %: DWL share [%]                                            6.4874       6.0000  PASS
+Sweep 50 %: DWL [MUSD]                                               2.0036       2.0000  PASS
+Sweep 50 %: DWL share [%]                                           34.1090      34.0000  PASS
+Sweep 50 %: battery [MWh]                                           25.8341      25.8000  PASS
+Sweep 50 %: PV [MWp]                                                11.5084      11.5000  PASS
+Sweep 5 %: p* average EF [USD/t]                                    35.6348      36.0000  PASS
+Sweep 50 %: p* average EF [USD/t]                                  268.4174     268.0000  PASS
+Sweep 5 %: p* gas [USD/t]                                            9.9129      10.0000  PASS
+Sweep 50 %: p* gas [USD/t]                                          74.6686      75.0000  PASS
+Subsidy rate with p* = 140 USD/t [%]                                26.6116      27.0000  PASS
+Average emission factor [t/MWh]                                      0.1029       0.1030  PASS
+Displaced energy, NPV-maximizing [MWh/yr]                         8339.2500    8339.0000  PASS
+Displaced energy, subsidized [MWh/yr]                            11153.3801   11153.0000  PASS
+Additional displaced energy [MWh/yr]                              2814.1302    2814.0000  PASS
+Threshold p_c*EF [USD/MWh], Eq. (10)                                16.0092      16.0000  PASS
+Threshold, average EF [USD/t]                                      155.5400     156.0000  PASS
+Threshold, gas EF [USD/t]                                           43.2682      43.0000  PASS
+Table 8 ('No carbon', 0) NPV-maximizing LCOE_s                      92.3990      92.4000  PASS
+Table 8 ('No carbon', 0) NPV-maximizing NPV [MUSD]                   3.6235       3.6200  PASS
+Table 8 ('No carbon', 0) Subsidized, re-optimized LCOE_s            98.5877      98.6000  PASS
+Table 8 ('No carbon', 0) Subsidized, re-optimized NPV [MUSD]         3.0792       3.0800  PASS
+Table 8 ('No carbon', 0) Ember LCOE_s                              112.1658     112.2000  PASS
+Table 8 ('No carbon', 0) Ember NPV [MUSD]                            1.8848       1.8800  PASS
+Table 8 ('Average EF', 50) NPV-maximizing LCOE_s                    86.5036      86.5000  PASS
+Table 8 ('Average EF', 50) NPV-maximizing NPV [MUSD]                 4.1421       4.1400  PASS
+Table 8 ('Average EF', 50) Subsidized, re-optimized LCOE_s          90.7029      90.7000  PASS
+Table 8 ('Average EF', 50) Subsidized, re-optimized NPV [MUSD]         3.7727       3.7700  PASS
+Table 8 ('Average EF', 50) Ember LCOE_s                            106.4427     106.4000  PASS
+Table 8 ('Average EF', 50) Ember NPV [MUSD]                          2.3882       2.3900  PASS
+Table 8 ('Average EF', 100) NPV-maximizing LCOE_s                   80.6082      80.6000  PASS
+Table 8 ('Average EF', 100) NPV-maximizing NPV [MUSD]                4.6607       4.6600  PASS
+Table 8 ('Average EF', 100) Subsidized, re-optimized LCOE_s         82.8180      82.8000  PASS
+Table 8 ('Average EF', 100) Subsidized, re-optimized NPV [MUSD]         4.4663       4.4700  PASS
+Table 8 ('Average EF', 100) Ember LCOE_s                           100.7196     100.7000  PASS
+Table 8 ('Average EF', 100) Ember NPV [MUSD]                         2.8917       2.8900  PASS
+Table 8 ('Average EF', 200) NPV-maximizing LCOE_s                   68.8173      68.8000  PASS
+Table 8 ('Average EF', 200) NPV-maximizing NPV [MUSD]                5.6978       5.7000  PASS
+Table 8 ('Average EF', 200) Subsidized, re-optimized LCOE_s         67.0483      67.0000  PASS
+Table 8 ('Average EF', 200) Subsidized, re-optimized NPV [MUSD]         5.8534       5.8500  PASS
+Table 8 ('Average EF', 200) Ember LCOE_s                            89.2735      89.3000  PASS
+Table 8 ('Average EF', 200) Ember NPV [MUSD]                         3.8985       3.9000  PASS
+Table 8 ('Gas EF', 50) NPV-maximizing LCOE_s                        71.2062      71.2000  PASS
+Table 8 ('Gas EF', 50) NPV-maximizing NPV [MUSD]                     5.4877       5.4900  PASS
+Table 8 ('Gas EF', 50) Subsidized, re-optimized LCOE_s              70.2434      70.2000  PASS
+Table 8 ('Gas EF', 50) Subsidized, re-optimized NPV [MUSD]           5.5724       5.5700  PASS
+Table 8 ('Gas EF', 50) Ember LCOE_s                                 91.5926      91.6000  PASS
+Table 8 ('Gas EF', 50) Ember NPV [MUSD]                              3.6945       3.6900  PASS
+Table 8 ('Gas EF', 100) NPV-maximizing LCOE_s                       50.0135      50.0000  PASS
+Table 8 ('Gas EF', 100) NPV-maximizing NPV [MUSD]                    7.3518       7.3500  PASS
+Table 8 ('Gas EF', 100) Subsidized, re-optimized LCOE_s             41.8990      41.9000  PASS
+Table 8 ('Gas EF', 100) Subsidized, re-optimized NPV [MUSD]          8.0656       8.0700  PASS
+Table 8 ('Gas EF', 100) Ember LCOE_s                                71.0193      71.0000  PASS
+Table 8 ('Gas EF', 100) Ember NPV [MUSD]                             5.5041       5.5000  PASS
+Table 8 ('Gas EF', 200) NPV-maximizing LCOE_s                        7.6280       7.6000  PASS
+Table 8 ('Gas EF', 200) NPV-maximizing NPV [MUSD]                   11.0801      11.0800  PASS
+Table 8 ('Gas EF', 200) Subsidized, re-optimized LCOE_s            -14.7897     -14.8000  PASS
+Table 8 ('Gas EF', 200) Subsidized, re-optimized NPV [MUSD]         13.0520      13.0500  PASS
+Table 8 ('Gas EF', 200) Ember LCOE_s                                29.8729      29.9000  PASS
+Table 8 ('Gas EF', 200) Ember NPV [MUSD]                             9.1234       9.1200  PASS

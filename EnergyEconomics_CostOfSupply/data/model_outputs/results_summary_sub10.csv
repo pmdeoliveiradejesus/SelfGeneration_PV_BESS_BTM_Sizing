@@ -1,0 +1,51 @@
+Variable,Value,Unit
+Case,sub10,-
+BESS capacity C,10871.001214192307,kWh
+BESS inverter,2000.0,kW
+PV capacity,6514.642434865804,kWp
+PV inverter,4000.0,kW
+ILR,1.628660608716451,-
+Load energy Wl,8760000.0,kWh/yr
+Energy bought Wb,2163867.9344429285,kWh/yr
+Energy sold Ws,2274619.3809137875,kWh/yr
+BESS charged Wc,3692151.777842227,kWh/yr
+BESS discharged Wd,3429137.8070576247,kWh/yr
+PV generated wpvmx,10041456.042213913,kWh/yr
+PV used wpv,9133765.417255456,kWh/yr
+PV clipping,907690.6249584574,kWh/yr
+CAPEX I0,5792179.787224211,USD
+BESS battery cost,2011135.2246255768,USD
+BESS inverter cost,96000.0,USD
+PV inverter cost,192000.0,USD
+PV modules cost,2527681.264727932,USD
+Soft costs,965363.2978707016,USD
+O&M of assets,145571.93759955716,USD/yr
+Energy purchases Eb,202816.31518235212,USD/yr
+Energy sales Es,153011.31558122273,USD/yr
+Capacity charges CP,1007.6990000000001,USD/yr
+Backup charge Cresp,0.0,USD/yr
+OPEX,349395.95178190933,USD/yr
+Purchases without project Eb0,908223.1169769851,USD/yr
+Capacity charges without project CP0,64294.637,USD/yr
+OPEX0,972517.7539769851,USD/yr
+Savings,623121.8021950758,USD/yr
+Cash flow CF,776133.1177762985,USD/yr
+NPV,4165190.3667260977,USD
+IRR constant CF,12.014053055975271,%
+IRR escalated CF,14.413699393543489,%
+Simple payback,7.462869003476367,yr
+Discounted payback constant CF,11.5237057441042,yr
+Discounted payback escalated CF,9.924589961722598,yr
+Benefit-cost ratio constant CF,1.345496963380621,-
+Benefit-cost ratio escalated CF,1.6191058495651747,-
+Asset LCOE 1 (Wl),85.84608741888299,USD/MWh
+Asset LCOE 2 (wpv),82.333155214247,USD/MWh
+Asset LCOE 3 (wpvmx),74.89070535468016,USD/MWh
+Supply LCOE (Wl),92.82617182105992,USD/MWh
+Grid-only LCOE 0 (Wl),133.5936919757301,USD/MWh
+Unserved load Wu,0.0,kWh/yr
+Asset LCOE over served energy,85.84608741888299,USD/MWh
+Net LCOE 1 (Wl),-40.767520154670194,USD/MWh
+Net LCOE 2 (Wl),92.82617182105992,USD/MWh
+crf,0.0995890201914585,-
+crfe,0.08275970609929227,-
