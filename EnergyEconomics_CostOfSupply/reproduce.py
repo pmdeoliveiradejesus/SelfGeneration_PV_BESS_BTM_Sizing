@@ -168,13 +168,13 @@ isl = levelize(isl_d)
 Wu = isl_d["Load energy Wl"] + isl_d["BESS charged Wc"] - isl_d["PV used wpv"] - isl_d["BESS discharged Wd"]
 served = 1 - Wu / isl_d["Load energy Wl"]
 
-for nm, r in [("NPV-maximizing", opt), ("Fixed capacity", noc), ("Ember", emb)]:
+for nm, r in [("NPV-maximizing", opt), ("Energy only", noc), ("Ember", emb)]:
     assert abs(r["chk"]) < 1e-6, f"Proposition 1 fails for {nm}"
     check(f"{nm}: asset LCOE vs model output", r["LCOE"], r["_d"]["Asset LCOE 1 (Wl)"], 1e-6)
     check(f"{nm}: LCOE_s vs model output", r["LS"], r["_d"]["Supply LCOE (Wl)"], 1e-6)
     check(f"{nm}: NPV vs model output [USD]", r["NPV"], r["_d"]["NPV"], 1.0)
 
-cols = {"NPV-maximizing": opt, "Fixed capacity contract": noc, "Ember configuration": emb}
+cols = {"NPV-max., energy and capacity": opt, "NPV-max., energy only": noc, "Ember configuration": emb}
 t5 = pd.DataFrame({k: {
     "PV [MWp]": v["PV"], "Battery [MWh]": v["C"], "Purchases [MWh/yr]": v["Wb"],
     "Exports [MWh/yr]": v["Ws"], "CAPEX [MUSD]": v["I0"] / 1e6, "NPV [MUSD]": v["NPV"] / 1e6,
@@ -199,18 +199,20 @@ check("Ember island: asset LCOE per MWh served", isl["LCOE"] / served, 112.2, 0.
 check("Ember: asset LCOE per MWh of load", emb["LCOE"], 103.1, 0.05)
 check("LCOE_s / LCOE_0, NPV-maximizing [%]", opt["LS"] / opt["L0"] * 100, 69, 0.5)
 check("Share of load bought from the grid [%]", opt["Wb"] / WL * 100, 28, 0.5)
+check("Capacity charges, energy only [kUSD/yr]", noc["_d"]["Capacity charges CP"] / 1e3, 64, 0.5)
+check("Capacity charges, energy and capacity [kUSD/yr]", opt["_d"]["Capacity charges CP"] / 1e3, 1, 0.05)
+check("Extra capacity charges, energy only [kUSD/yr]", (noc["_d"]["Capacity charges CP"] - opt["_d"]["Capacity charges CP"]) / 1e3, 63, 0.5)
+check("LCOE_s: energy only minus energy and capacity", noc["LS"] - opt["LS"], 8.1, 0.05)
+check("V: energy and capacity minus energy only", opt["V"] - noc["V"], 8.1, 0.05)
+check("G: energy only minus energy and capacity", noc["G"] - opt["G"], 13.5, 0.05)
 check("Ratio V(opt)/V(Ember)", opt["V"] / emb["V"], 1.92, 0.01)
 check("Supply cost below grid, Ember [%]", (1 - emb["LS"] / emb["L0"]) * 100, 16, 0.5)
 check("Floor A: optimal minus Ember", emb["LS"] - opt["LS"], 19.8, 0.05)
-check("Capacity charges, fixed contract [kUSD/yr]", noc["_d"]["Capacity charges CP"] / 1e3, 64, 0.5)
-check("Capacity charges, optimal [kUSD/yr]", opt["_d"]["Capacity charges CP"] / 1e3, 1, 0.05)
 alpha_114 = (114 - opt["LS"]) / opt["V"]
 check("alpha such that pi_p = 114 (Eq. 11)", alpha_114, 0.52, 0.005)
 check("LCOE_s minus asset LCOE, NPV-maximizing", opt["LS"] - opt["LCOE"], 14.9, 0.05)
-check("LCOE_s: fixed capacity minus optimal", noc["LS"] - opt["LS"], 8.1, 0.05)
 check("Asset LCOE: Ember minus optimal", emb["LCOE"] - opt["LCOE"], 25.6, 0.05)
 check("G: optimal minus Ember", opt["G"] - emb["G"], 22.9, 0.05)
-check("G: fixed capacity minus optimal", noc["G"] - opt["G"], 13.5, 0.05)
 check("LCOE + G (threshold for negative LCOE_s)", opt["LCOE"] + opt["G"], 109.4, 0.05)
 
 # Zero and negative price hours (Section 4.2), hourly dispatch of the NPV-maximizing design
@@ -225,7 +227,7 @@ check("Exports at zero/negative prices [MWh]", h.Ps[zn].sum() / 1e3, 0, 0.01)
 # 5. Contract price bounds (Table 6)
 # ---------------------------------------------------------------------------
 rows = {}
-for nm, r in [("NPV-maximizing", opt), ("Fixed capacity contract", noc), ("Ember configuration", emb)]:
+for nm, r in [("NPV-max., energy and capacity", opt), ("NPV-max., energy only", noc), ("Ember configuration", emb)]:
     b = bounds(r)
     for k in "ABC":
         assert abs(b[k][1] - b[k][0] - r["V"]) < 1e-9          # Proposition 2 (i)
@@ -234,9 +236,9 @@ for nm, r in [("NPV-maximizing", opt), ("Fixed capacity contract", noc), ("Ember
     rows[(nm, "Price, alpha = 0.5")] = {k: b[k][0] + 0.5 * r["V"] for k in "ABC"}
 t6 = pd.DataFrame(rows).T.rename(columns={"A": "A. Full-supply PPA", "B": "B. On-site PPA", "C": "C. Asset lease"})
 write_table("table6_bounds", t6, "Table 6. Reservation prices [USD/MWh of load], no subsidies")
-for (lab, kind, vals) in [("NPV-maximizing", "Floor", (92.4, 60.5, 77.5)), ("NPV-maximizing", "Ceiling", (133.6, 101.7, 118.7)),
-                          ("NPV-maximizing", "Price, alpha = 0.5", (113.0, 81.1, 98.1)),
-                          ("Fixed capacity contract", "Floor", (100.5, 55.1, 70.7)), ("Fixed capacity contract", "Ceiling", (133.6, 88.2, 103.8)),
+for (lab, kind, vals) in [("NPV-max., energy and capacity", "Floor", (92.4, 60.5, 77.5)), ("NPV-max., energy and capacity", "Ceiling", (133.6, 101.7, 118.7)),
+                          ("NPV-max., energy and capacity", "Price, alpha = 0.5", (113.0, 81.1, 98.1)),
+                          ("NPV-max., energy only", "Floor", (100.5, 55.1, 70.7)), ("NPV-max., energy only", "Ceiling", (133.6, 88.2, 103.8)),
                           ("Ember configuration", "Floor", (112.2, 103.1, 103.1)), ("Ember configuration", "Ceiling", (133.6, 124.6, 124.6))]:
     for c, rv in zip(t6.columns, vals):
         check(f"Table 6 {lab} {kind} {c[:2]}", t6.loc[(lab, kind), c], rv, 0.051)
@@ -344,10 +346,10 @@ plt.rcParams.update({"font.family": "serif", "font.size": 8, "axes.spines.top": 
 C_COST, C_UP, C_DN, C_SUB, C_RES = "#4a4a4a", "#c0504d", "#4f81bd", "#9bbb59", "#1f1f1f"
 
 # Figure 1: decomposition of the cost of supply
-fig, axs2 = plt.subplots(2, 2, figsize=(3.5, 3.4), sharey=True); axs = axs2.ravel()
+fig, axs = plt.subplots(1, 4, figsize=(7.0, 2.4), sharey=True)
 L0 = opt["L0"]
-for ax, (name, r) in zip(axs, [("(a) NPV-maximizing", opt), ("(b) Fixed capacity contract", noc),
-                               ("(c) Ember configuration", emb), ("(d) Subsidized, re-optimized", sub_opt)]):
+for ax, (name, r) in zip(axs, [("(a) NPV-maximizing,\nenergy and capacity", opt), ("(b) NPV-maximizing,\nenergy only", noc),
+                               ("(c) Ember\nconfiguration", emb), ("(d) Subsidized,\nre-optimized", sub_opt)]):
     LA, G, S, Z = r["LCOE"], r["G"], r["S"], r["Z"]; LS = r["LS"]
     steps = [("$LCOE$", 0, LA, C_COST), ("$+G$", LA, LA + G, C_UP), ("$-S$", LA + G, LA + G - S, C_DN)]
     if Z > 0: steps.append(("$-Z$", LA + G - S, LS, C_SUB))
@@ -368,7 +370,7 @@ for ax, (name, r) in zip(axs, [("(a) NPV-maximizing", opt), ("(b) Fixed capacity
         ax.text(m - 1, r["LSsoc"] + 1.5, f"social\n{r['LSsoc']:.1f}", fontsize=4.6, ha="center", va="bottom", color=C_UP)
     ax.set_xticks(range(m)); ax.set_xticklabels([s[0] for s in steps], fontsize=5.5)
     ax.set_title(name, fontsize=6.2); ax.set_xlim(-0.6, m - 1 + 1.25)
-axs[0].set_ylabel("USD/MWh of load", fontsize=6); axs[2].set_ylabel("USD/MWh of load", fontsize=6)
+axs[0].set_ylabel("USD/MWh of load", fontsize=6)
 for a_ in axs: a_.tick_params(labelsize=5.5, length=2); axs[0].set_ylim(0, 150)
 axs[0].text(-0.5, L0 + 1.5, "$LCOE_0$", fontsize=5)
 fig.tight_layout(w_pad=0.4, h_pad=0.6, pad=0.3); fig.savefig(os.path.join(FIG, "fig_decomposition.pdf")); plt.close(fig)

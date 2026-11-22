@@ -19,7 +19,7 @@ This takes a few seconds and needs no optimizer or solver licence. It:
 - applies the closed-form accounting of Section 3 of the paper (Eqs. 1–10, Table 2);
 - writes Tables 5–8 and the data of Figure 2 to `tables/` (CSV and LaTeX);
 - writes Figures 1–3 to `figures/` (PDF);
-- writes `key_numbers.txt`, which compares 187 numbers reported in the paper (tables, figures, and text) with the recomputed values.
+- writes `key_numbers.txt`, which compares 189 numbers reported in the paper (tables, figures, and text) with the recomputed values.
 
 The script exits with code 0 only if all of them match to the precision reported.
 
@@ -54,8 +54,8 @@ The script exits with code 0 only if all of them match to the precision reported
 
 - **`results_summary_<case>.csv`:** one file per run, holding the annual quantities in the columns *Variable, Value, Unit*. Examples are installed capacities, CAPEX, O&M, purchases $E_b$, capacity charges $CP$, sales $E_s$, the grid-only payments $E_{b0}$ and $CP_0$, NPV, IRR, and LCOEs.
 - **The cases are:**
-  - `optimal`: the NPV-maximizing design;
-  - `nocontract`: contracted capacity fixed at 1 MW;
+  - `optimal`: the NPV-maximizing design, energy and capacity optimized;
+  - `nocontract`: the NPV-maximizing design with energy only optimized, contracted capacity fixed at 1 MW in the six blocks;
   - `ember`: the Ember configuration with grid connection;
   - `ember_island`: the Ember configuration as an island;
   - `subXX`: re-optimization with an investment subsidy of XX %.

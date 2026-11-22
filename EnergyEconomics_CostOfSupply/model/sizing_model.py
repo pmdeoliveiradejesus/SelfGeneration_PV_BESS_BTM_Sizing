@@ -14,7 +14,7 @@ The bilinear constraints (11)-(12), P_c <= P_bess^inv * w and
 P_d <= P_bess^inv * (1 - w), are replaced by linear Big-M constraints.
 Usage (from this folder; inputs are read from ../data/inputs):
     python sizing_model.py --case optimal          NPV-maximizing design (Table 5, column 1)
-    python sizing_model.py --case nocontract       contracted capacity fixed at 1 MW (Table 5, column 2)
+    python sizing_model.py --case nocontract       contracted capacity fixed at 1 MW (Table 5, energy-only design)
     python sizing_model.py --case ember            Ember configuration, grid-connected (Table 5, column 3)
     python sizing_model.py --case ember_island     Ember configuration in island (Section 4.2)
     python sizing_model.py --case subsidy --sub 0.30   re-optimization with a 30 % investment subsidy

@@ -7,9 +7,9 @@ Hours with negative price                                          247.0000     
 NPV-maximizing: asset LCOE vs model output                          77.5128      77.5128  PASS
 NPV-maximizing: LCOE_s vs model output                              92.3990      92.3990  PASS
 NPV-maximizing: NPV vs model output [USD]                      3623548.5148 3623548.5148  PASS
-Fixed capacity: asset LCOE vs model output                          70.7364      70.7364  PASS
-Fixed capacity: LCOE_s vs model output                             100.5359     100.5359  PASS
-Fixed capacity: NPV vs model output [USD]                      2907809.2505 2907809.2505  PASS
+Energy only: asset LCOE vs model output                             70.7364      70.7364  PASS
+Energy only: LCOE_s vs model output                                100.5359     100.5359  PASS
+Energy only: NPV vs model output [USD]                         2907809.2505 2907809.2505  PASS
 Ember: asset LCOE vs model output                                  103.1267     103.1267  PASS
 Ember: LCOE_s vs model output                                      112.1658     112.1658  PASS
 Ember: NPV vs model output [USD]                               1884832.2978 1884832.2978  PASS
@@ -60,37 +60,39 @@ Ember island: asset LCOE per MWh served                            112.2239     
 Ember: asset LCOE per MWh of load                                  103.1267     103.1000  PASS
 LCOE_s / LCOE_0, NPV-maximizing [%]                                 69.1642      69.0000  PASS
 Share of load bought from the grid [%]                              27.7621      28.0000  PASS
+Capacity charges, energy only [kUSD/yr]                             64.2946      64.0000  PASS
+Capacity charges, energy and capacity [kUSD/yr]                      1.0077       1.0000  PASS
+Extra capacity charges, energy only [kUSD/yr]                       63.2869      63.0000  PASS
+LCOE_s: energy only minus energy and capacity                        8.1370       8.1000  PASS
+V: energy and capacity minus energy only                             8.1370       8.1000  PASS
+G: energy only minus energy and capacity                            13.5074      13.5000  PASS
 Ratio V(opt)/V(Ember)                                                1.9225       1.9200  PASS
 Supply cost below grid, Ember [%]                                   16.0396      16.0000  PASS
 Floor A: optimal minus Ember                                        19.7668      19.8000  PASS
-Capacity charges, fixed contract [kUSD/yr]                          64.2946      64.0000  PASS
-Capacity charges, optimal [kUSD/yr]                                  1.0077       1.0000  PASS
 alpha such that pi_p = 114 (Eq. 11)                                  0.5244       0.5200  PASS
 LCOE_s minus asset LCOE, NPV-maximizing                             14.8862      14.9000  PASS
-LCOE_s: fixed capacity minus optimal                                 8.1370       8.1000  PASS
 Asset LCOE: Ember minus optimal                                     25.6139      25.6000  PASS
 G: optimal minus Ember                                              22.8587      22.9000  PASS
-G: fixed capacity minus optimal                                     13.5074      13.5000  PASS
 LCOE + G (threshold for negative LCOE_s)                           109.4106     109.4000  PASS
 Battery charge at zero/negative prices [MWh]                       756.9146     757.0000  PASS
 PV curtailed at zero/negative prices [MWh]                         622.9723     623.0000  PASS
 Purchases at zero prices [MWh]                                      76.5126      77.0000  PASS
 Exports at zero/negative prices [MWh]                                0.0000       0.0000  PASS
-Table 6 NPV-maximizing Floor A.                                     92.3990      92.4000  PASS
-Table 6 NPV-maximizing Floor B.                                     60.5012      60.5000  PASS
-Table 6 NPV-maximizing Floor C.                                     77.5128      77.5000  PASS
-Table 6 NPV-maximizing Ceiling A.                                  133.5937     133.6000  PASS
-Table 6 NPV-maximizing Ceiling B.                                  101.6959     101.7000  PASS
-Table 6 NPV-maximizing Ceiling C.                                  118.7075     118.7000  PASS
-Table 6 NPV-maximizing Price, alpha = 0.5 A.                       112.9963     113.0000  PASS
-Table 6 NPV-maximizing Price, alpha = 0.5 B.                        81.0986      81.1000  PASS
-Table 6 NPV-maximizing Price, alpha = 0.5 C.                        98.1102      98.1000  PASS
-Table 6 Fixed capacity contract Floor A.                           100.5359     100.5000  PASS
-Table 6 Fixed capacity contract Floor B.                            55.1308      55.1000  PASS
-Table 6 Fixed capacity contract Floor C.                            70.7364      70.7000  PASS
-Table 6 Fixed capacity contract Ceiling A.                         133.5937     133.6000  PASS
-Table 6 Fixed capacity contract Ceiling B.                          88.1885      88.2000  PASS
-Table 6 Fixed capacity contract Ceiling C.                         103.7941     103.8000  PASS
+Table 6 NPV-max., energy and capacity Floor A.                      92.3990      92.4000  PASS
+Table 6 NPV-max., energy and capacity Floor B.                      60.5012      60.5000  PASS
+Table 6 NPV-max., energy and capacity Floor C.                      77.5128      77.5000  PASS
+Table 6 NPV-max., energy and capacity Ceiling A.                   133.5937     133.6000  PASS
+Table 6 NPV-max., energy and capacity Ceiling B.                   101.6959     101.7000  PASS
+Table 6 NPV-max., energy and capacity Ceiling C.                   118.7075     118.7000  PASS
+Table 6 NPV-max., energy and capacity Price, alpha = 0.5 A.        112.9963     113.0000  PASS
+Table 6 NPV-max., energy and capacity Price, alpha = 0.5 B.         81.0986      81.1000  PASS
+Table 6 NPV-max., energy and capacity Price, alpha = 0.5 C.         98.1102      98.1000  PASS
+Table 6 NPV-max., energy only Floor A.                             100.5359     100.5000  PASS
+Table 6 NPV-max., energy only Floor B.                              55.1308      55.1000  PASS
+Table 6 NPV-max., energy only Floor C.                              70.7364      70.7000  PASS
+Table 6 NPV-max., energy only Ceiling A.                           133.5937     133.6000  PASS
+Table 6 NPV-max., energy only Ceiling B.                            88.1885      88.2000  PASS
+Table 6 NPV-max., energy only Ceiling C.                           103.7941     103.8000  PASS
 Table 6 Ember configuration Floor A.                               112.1658     112.2000  PASS
 Table 6 Ember configuration Floor B.                               103.1267     103.1000  PASS
 Table 6 Ember configuration Floor C.                               103.1267     103.1000  PASS

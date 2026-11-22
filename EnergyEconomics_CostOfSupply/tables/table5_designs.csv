@@ -1,4 +1,4 @@
-,NPV-maximizing,Fixed capacity contract,Ember configuration
+,"NPV-max., energy and capacity","NPV-max., energy only",Ember configuration
 PV [MWp],6.108228800726954,5.748874044932009,5.999999999999999
 Battery [MWh],9.328716125139847,8.119041555512633,17.0
 Purchases [MWh/yr],2431.95810459671,2770.717377360544,664.5294459348981
